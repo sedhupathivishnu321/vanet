@@ -1,0 +1,24 @@
+Directions
+Distance: 9.8km. Time: 0:11.
+
+1. Start on Hosur Road (NH44)	3.3km
+2. Continue on Hosur road	300m
+3. Slight left onto Hosur Road	110m
+4. Turn right onto Mahayogi Vemana Road	1.8km
+5. Continue on Inner Ring Road	3.4km
+6. Continue on Domlur Flyover	500m
+7. Continue on 100 Feet Road	400m
+8. Reach destination	
+
+From: Hosur Road, Sector 7, ஹெச் எஸ் ஆர் லேஅவுட், Bangalore South, Bengaluru Urban, Karnataka, 560068, India
+To: 100 Feet Road, Babasaheb Colony, டோம்லூர், Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560008, India
+
+https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=12.895191%2C77.636073%3B12.96579%2C77.6415#map=13/12.93050/77.62986  
+
+Scenario Description:
+In this simulation, we are analyzing the vehicular traffic flow and the routing efficiency in a Vehicular Ad-hoc Network (VANET), considering real-world road data and infrastructure in the city of Bangalore, India. The route spans 9.8 km from Hosur Road, Sector 7, to 100 Feet Road, Babasaheb Colony, Domlur, covering multiple roads with different traffic conditions.
+
+The purpose of this simulation is to study how vehicles interact in a network, optimize routes, prioritize certain vehicles (such as emergency vehicles), and evaluate the effectiveness of real-time communication between vehicles and infrastructure (RSUs) to ensure safe and efficient traffic management. Additionally, the simulation can be used to assess congestion, traffic signal optimization, and emergency route management in a busy urban environment.
+
+
+

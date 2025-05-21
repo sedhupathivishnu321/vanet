@@ -1,0 +1,118 @@
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import random
+
+# Define the route steps with traffic signal locations
+route_steps = [
+    {"segment": "Start on Hosur Road (NH44)", "distance_km": 3.3, "has_traffic_signal": False},
+    {"segment": "Continue on Hosur road", "distance_km": 0.3, "has_traffic_signal": False},
+    {"segment": "Slight left onto Hosur Road", "distance_km": 0.11, "has_traffic_signal": False},
+    {"segment": "Turn right onto Mahayogi Vemana Road", "distance_km": 1.8, "has_traffic_signal": True},  # Signal here
+    {"segment": "Continue on Inner Ring Road", "distance_km": 3.4, "has_traffic_signal": False},
+    {"segment": "Continue on Domlur Flyover", "distance_km": 0.5, "has_traffic_signal": False},
+    {"segment": "Continue on 100 Feet Road", "distance_km": 0.4, "has_traffic_signal": True},  # Signal here
+    {"segment": "Reach destination", "distance_km": 0.1, "has_traffic_signal": False}
+]
+
+# Define the time range (from 01-04-2025 to 08-04-2025, from 8:00 AM to 10:00 AM each day)
+start_date = datetime(2025, 4, 1, 8, 0)
+end_date = datetime(2025, 4, 8, 10, 0)
+
+# Generate timestamps at 30-second intervals
+timestamps = []
+current_time = start_date
+while current_time <= end_date:
+    timestamps.append(current_time)
+    current_time += timedelta(seconds=30)
+
+# Event types for simulation
+event_types = ["Normal", "Accident", "Construction", "Traffic Jam", "Police Check"]
+
+# Traffic signal timing cycle
+TRAFFIC_SIGNAL_CYCLE = {
+    "green": 30,
+    "yellow": 5,
+    "red": 25
+}
+
+# Function to simulate signal status
+def get_signal_status(timestamp, signal_start_time, accident_time=None):
+    if accident_time and (timestamp >= accident_time and timestamp < accident_time + timedelta(minutes=10)):
+        return "red"  # Stop traffic for 10 minutes during an accident
+    
+    cycle_time = (timestamp - signal_start_time).seconds
+    total_cycle = TRAFFIC_SIGNAL_CYCLE["green"] + TRAFFIC_SIGNAL_CYCLE["yellow"] + TRAFFIC_SIGNAL_CYCLE["red"]
+    position_in_cycle = cycle_time % total_cycle
+
+    if position_in_cycle < TRAFFIC_SIGNAL_CYCLE["green"]:
+        return "green"
+    elif position_in_cycle < TRAFFIC_SIGNAL_CYCLE["green"] + TRAFFIC_SIGNAL_CYCLE["yellow"]:
+        return "yellow"
+    else:
+        return "red"
+
+# Function to compute congestion level
+def calculate_congestion(cars, buses, two_wheelers, autos):
+    congestion = (cars * 10) + (buses * 5) + (two_wheelers * 2) + (autos * 3)
+    return min(100, max(0, congestion))
+
+# Dataset generation
+data = []
+signal_start_time = datetime(2025, 4, 1, 8, 0)
+
+# Randomly select an accident event time
+accident_time = random.choice(timestamps) if random.random() < 0.1 else None  # 10% chance of accident
+
+for i, segment in enumerate(route_steps):
+    for timestamp in timestamps:
+        cars = random.randint(0, 10)
+        buses = random.randint(0, 3)
+        two_wheelers = random.randint(0, 15)
+        autos = random.randint(0, 5)
+
+        if segment["has_traffic_signal"]:
+            signal_status = get_signal_status(timestamp, signal_start_time, accident_time)
+            if signal_status == "red":
+                speed = 0
+            elif signal_status == "yellow":
+                speed = max(5, np.random.normal(loc=15, scale=5))
+            else:
+                speed = round(max(5, np.random.normal(loc=35, scale=10)), 2)
+        else:
+            signal_status = "Normal"
+            speed = round(max(5, np.random.normal(loc=35, scale=10)), 2)
+
+        congestion = calculate_congestion(cars, buses, two_wheelers, autos)
+        event = random.choices(event_types, weights=[70, 5, 5, 15, 5])[0]
+
+        data.append({
+            "date": timestamp.date(),
+            "timestamp": timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            "segment_index": i + 1,
+            "road_segment": segment["segment"],
+            "distance_km": segment["distance_km"],
+            "speed_kmph": speed,
+            "congestion_level": congestion,
+            "event_type": event,
+            "cars_count": cars,
+            "two_wheelers_count": two_wheelers,
+            "autos_count": autos,
+            "buses_count": buses,
+            "traffic_signal_status": signal_status
+        })
+
+# Create and save DataFrame
+df = pd.DataFrame(data)
+df = df.sort_values(by=["date", "segment_index", "timestamp"]).reset_index(drop=True)
+
+# Optional: View row counts per road segment
+print("\nRow counts per segment:")
+print(df.groupby("road_segment").size())
+
+# Save dataset
+df.to_csv("HSR_to_Domlur_Traffic_Simulation_01_to_08_Apr_2025_with_accident.csv", index=False)
+
+# Preview
+print("\nPreview of dataset:")
+print(df.head(10))

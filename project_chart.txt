@@ -1,0 +1,24 @@
+traffic_ml_project/
+│
+├── data/
+│   ├── gps/
+│   ├── weather/
+│   ├── historical/
+│
+├── models/
+│   ├── lstm_model.py
+│   ├── xgboost_model.py
+│   ├── gnn_model.py
+│   └── rl_agent.py
+│
+├── dashboard/
+│   └── app.py  # Streamlit or Flask dashboard
+│
+├── simulation/
+│   └── SUMO_files/
+│
+├── utils/
+│   └── preprocess.py
+│   └── data_fetch.py
+│
+└── main.py

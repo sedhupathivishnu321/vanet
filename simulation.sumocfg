@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <input>
+        <!-- Path to your network file -->
+        <net-file value="output_network.net.xml"/>
+
+        <!-- Path to your route file -->
+        <route-files value="routes.rou.xml"/>
+    </input>
+
+    <time>
+        <!-- Simulation start and end time -->
+        <begin value="0"/>
+        <end value="3600"/>
+    </time>
+
+    <report>
+        <!-- Optional: Save a summary log -->
+        <verbose value="true"/>
+        <no-step-log value="true"/>
+    </report>
+</configuration>

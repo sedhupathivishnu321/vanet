@@ -1,0 +1,10 @@
+cd "C:\Program Files (x86)\Eclipse\Sumo\tools"
+
+
+netconvert --osm-files F:\PROJECTS\MAHESH_Sister\vanet_project\map.osm -o F:\PROJECTS\MAHESH_Sister\vanet_project\output_network.net.xml --geometry.remove true --ramps.guess true --junctions.join true --output.street-names true
+
+
+python randomTrips.py -n F:/PROJECTS/MAHESH_Sister/vanet_project/output_network.net.xml -o F:/PROJECTS/MAHESH_Sister/vanet_project/routes.rou.xml -r F:/PROJECTS/MAHESH_Sister/vanet_project/trips.trips.xml --trip-attributes="departLane=\"best\" departSpeed=\"max\" departPos=\"random\"" -b 0 -e 3600 -p 2.0 --validate --fringe-factor 5
+
+
+sumo-gui -c "F:\PROJECTS\MAHESH_Sister\vanet_project\simulation.sumocfg"
