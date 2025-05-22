@@ -1,16 +1,30 @@
-import traci
+from data_fetch import fetch_all_data
+from preprocess import preprocess_all_data
+from lstm_model import run_lstm
+from xgboost_model import run_xgboost
+from gnn_model import run_gnn
+from rl_agent import run_rl_simulation
 
-# Start SUMO simulation with TraCI
-traci.start(["sumo", "-c", "simulation.sumocfg"])
+def main():
+    print("Fetching data...")
+    raw_data = fetch_all_data()
 
-# Change vehicle appearance by changing its type dynamically
-vehicle_id = "vehicle1"
-new_vehicle_type = "bus"
-traci.vehicle.setType(vehicle_id, new_vehicle_type)
+    print("Preprocessing data...")
+    processed_data = preprocess_all_data(raw_data)
 
-# Run the simulation
-while traci.simulation.getMinExpectedNumber() > 0:
-    traci.simulationStep()
+    print("Running LSTM prediction...")
+    lstm_results = run_lstm(processed_data)
 
-# Close the connection
-traci.close()
+    print("Running XGBoost prediction...")
+    xgb_results = run_xgboost(processed_data)
+
+    print("Running GNN congestion graph prediction...")
+    gnn_results = run_gnn(processed_data)
+
+    print("Running Reinforcement Learning signal optimization...")
+    run_rl_simulation(processed_data)
+
+    print("All models executed successfully.")
+
+if __name__ == "__main__":
+    main()
